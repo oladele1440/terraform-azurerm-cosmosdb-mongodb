@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "azurerm" {
-  version = "~> 2.34.0"
+  version = "~> 2.37.0"
   features {}
 }
 
@@ -63,8 +63,9 @@ resource "azurerm_cosmosdb_account" "main" {
   offer_type          = "Standard"
   kind                = "MongoDB"
 
-  enable_automatic_failover = false
-  ip_range_filter           = var.ip_range_filter
+  enable_automatic_failover         = false
+  ip_range_filter                   = var.ip_range_filter
+  is_virtual_network_filter_enabled = var.is_virtual_network_filter_enabled
 
   capabilities {
     name = "EnableMongo"
@@ -79,6 +80,14 @@ resource "azurerm_cosmosdb_account" "main" {
   geo_location {
     location          = azurerm_resource_group.main.location
     failover_priority = 0
+  }
+
+  dynamic "virtual_network_rule" {
+    for_each = var.virtual_network_rules
+    content {
+      id                                   = virtual_network_rule.value
+      ignore_missing_vnet_service_endpoint = false
+    }
   }
 
   tags = var.tags
