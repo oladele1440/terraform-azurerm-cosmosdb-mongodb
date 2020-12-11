@@ -23,10 +23,11 @@ module "cosmosdb" {
   }
 
   diagnostics = {
-    destination   = "test"
-    eventhub_name = "diagnostics",
-    logs          = ["all"],
-    metrics       = ["all"],
+    destination          = "test"
+    eventhub_name_log    = "diagnostics-log"
+    eventhub_name_metric = "diagnostics-metric",
+    logs                 = ["all"],
+    metrics              = ["all"],
   }
 
 }
